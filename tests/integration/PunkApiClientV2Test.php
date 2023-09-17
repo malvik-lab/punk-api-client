@@ -3,23 +3,24 @@
 namespace Integration;
 
 use MalvikLab\PunkApiClient\Client;
-use MalvikLab\PunkApiClient\Clients\V2\Client as ClientV2;
+use MalvikLab\PunkApiClient\Clients\V2\Client as V2Client;
 use MalvikLab\PunkApiClient\Clients\V2\DTO\BeersWithPaginationDTO;
 use MalvikLab\PunkApiClient\Exceptions\InvalidClientVersionException;
+use MalvikLab\PunkApiClient\Makers\ClientMaker;
 use MalvikLab\PunkApiClient\Exceptions\ElementNotFoundException;
 use MalvikLab\PunkApiClient\Exceptions\InvalidInputException;
-use MalvikLab\PunkApiClient\Interfaces\ClientInterface;
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Exception\GuzzleException;
 use MalvikLab\PunkApiClient\Clients\V2\DTO\BeerDTO;
 
 final class PunkApiClientV2Test extends TestCase
 {
-    private ClientV2 $client;
+    private V2Client $client;
 
     protected function setUp(): void
     {
-        $this->client = Client::make(Client::V2);
+        $this->client = (new Client('v2'))
+            ->getClient();
     }
 
     /**
@@ -28,15 +29,37 @@ final class PunkApiClientV2Test extends TestCase
     public function testInvalidClientVersionViaMaker()
     {
         $this->expectException(InvalidClientVersionException::class);
-        Client::make('x');
+        ClientMaker::make('x');
     }
 
-    public function testClientV2()
+    /**
+     * @throws InvalidClientVersionException
+     */
+    public function testMaker()
     {
-        $client = new ClientV2();
-        $this->assertInstanceOf(ClientInterface::class, $client);
+        $client = ClientMaker::make('v2');
+        $this->assertInstanceOf(V2Client::class, $client);
     }
-    
+
+    /**
+     * @return void
+     */
+    public function testInvalidClientViaAbstractClient()
+    {
+        $this->expectException(InvalidClientVersionException::class);
+        new Client('x');
+    }
+
+    /**
+     * @return void
+     */
+    public function testAbstractClient()
+    {
+        $build = new Client('v2');
+        $client = $build->getClient();
+        $this->assertInstanceOf(V2Client::class, $client);
+    }
+
     /**
      * @return void
      * @throws GuzzleException
