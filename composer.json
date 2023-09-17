@@ -1,26 +1,17 @@
 {
-  "name": "malvik-lab/punk-api-client",
-  "description": "",
-  "keywords": [],
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Vittorio Malaspina",
-      "email": "vittorio.malaspina@gmail.com",
-      "role": "Developer"
+    "name": "vik/test",
+    "autoload": {
+        "psr-4": {
+            "Vik\\Test\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Vittorio Malaspina",
+            "email": "vittorio.malaspina@gmail.com"
+        }
+    ],
+    "require": {
+        "malvik-lab/punk-api-client": "@dev"
     }
-  ],
-  "autoload": {
-    "psr-4": {
-      "MalvikLab\\PunkApiClient\\": "src/"
-    }
-  },
-  "require": {
-    "php": "^8.2",
-    "guzzlehttp/guzzle": "^7.0"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^10"
-  },
-  "minimum-stability": "stable"
 }
