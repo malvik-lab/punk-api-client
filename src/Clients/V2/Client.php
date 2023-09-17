@@ -6,13 +6,14 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use MalvikLab\PunkApiClient\Clients\AbstractClient;
 use MalvikLab\PunkApiClient\Clients\V2\DTO\BeersWithPaginationDTO;
+use MalvikLab\PunkApiClient\Interfaces\ClientInterface;
 use MalvikLab\PunkApiClient\Utils\StringUtil;
 use MalvikLab\PunkApiClient\Exceptions\InvalidInputException;
 use MalvikLab\PunkApiClient\Exceptions\ElementNotFoundException;
 use MalvikLab\PunkApiClient\Clients\V2\Makers\BeerMaker;
 use MalvikLab\PunkApiClient\Clients\V2\DTO\BeerDTO;
 
-class Client extends AbstractClient
+class Client implements ClientInterface
 {
     public function __construct(private null | HttpClient $httpClient = null)
     {
