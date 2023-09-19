@@ -71,22 +71,23 @@ class Client implements ClientInterface
      * @param int $perPage
      * @return BeersWithPaginationDTO
      * @throws GuzzleException
-     * @throws InvalidInputException
+     * @throws ValidationException
      */
     public function beersWithPagination(int $page = 1, int $perPage = 25): BeersWithPaginationDTO
     {
-        if ( !filter_var($page, FILTER_VALIDATE_INT) || $page < 1 )
-        {
-            throw new InvalidInputException(
-                StringUtil::exception('Requested Page is invalid')
-            );
-        }
+        $validator = new Validator();
 
-        if ( !filter_var($perPage, FILTER_VALIDATE_INT) || $perPage < 1 )
+        $data = [
+            'page' => $page,
+            'perPage' => $perPage
+        ];
+
+        $validation = $validator->make($data, BeersRule::get());
+        $validation->validate();
+
+        if ( $validation->fails() )
         {
-            throw new InvalidInputException(
-                StringUtil::exception('Requested Per Page is invalid')
-            );
+            throw new ValidationException($validation->errors());
         }
 
         $previousPage = false;
