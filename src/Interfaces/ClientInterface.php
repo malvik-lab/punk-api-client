@@ -4,11 +4,28 @@ namespace MalvikLab\PunkApiClient\Interfaces;
 
 interface ClientInterface
 {
+    /**
+     * @param int $page
+     * @param int $perPage
+     * @return array
+     */
     public function beers(int $page, int $perPage): array;
 
-    public function beersWithPagination(int $page, int $perPage);
+    /**
+     * @param int $page
+     * @param int $perPage
+     * @return mixed
+     */
+    public function beersWithPagination(int $page, int $perPage): mixed;
 
-    public function beer(int $id);
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function beer(int $id): mixed;
 
-    public function randomBeer();
+    /**
+     * @return mixed
+     */
+    public function randomBeer(): mixed;
 }

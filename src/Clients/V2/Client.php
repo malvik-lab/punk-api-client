@@ -4,7 +4,8 @@ namespace MalvikLab\PunkApiClient\Clients\V2;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
-use MalvikLab\PunkApiClient\Clients\AbstractClient;
+use MalvikLab\PunkApiClient\Exceptions\ValidationException;
+use Rakit\Validation\Validator;
 use MalvikLab\PunkApiClient\Clients\V2\DTO\BeersWithPaginationDTO;
 use MalvikLab\PunkApiClient\Interfaces\ClientInterface;
 use MalvikLab\PunkApiClient\Utils\StringUtil;
@@ -12,6 +13,7 @@ use MalvikLab\PunkApiClient\Exceptions\InvalidInputException;
 use MalvikLab\PunkApiClient\Exceptions\ElementNotFoundException;
 use MalvikLab\PunkApiClient\Clients\V2\Makers\BeerMaker;
 use MalvikLab\PunkApiClient\Clients\V2\DTO\BeerDTO;
+use MalvikLab\PunkApiClient\Clients\V2\Rules\BeersRule;
 
 class Client implements ClientInterface
 {
@@ -28,22 +30,23 @@ class Client implements ClientInterface
      * @param int $perPage
      * @return BeerDTO[]
      * @throws GuzzleException
-     * @throws InvalidInputException
+     * @throws ValidationException
      */
     public function beers(int $page = 1, int $perPage = 25): array
     {
-        if ( !filter_var($page, FILTER_VALIDATE_INT) || $page < 1 )
-        {
-            throw new InvalidInputException(
-                StringUtil::exception('Requested Page is invalid')
-            );
-        }
+        $validator = new Validator();
 
-        if ( !filter_var($perPage, FILTER_VALIDATE_INT) || $perPage < 1 )
+        $data = [
+            'page' => $page,
+            'perPage' => $perPage
+        ];
+
+        $validation = $validator->make($data, BeersRule::get());
+        $validation->validate();
+
+        if ( $validation->fails() )
         {
-            throw new InvalidInputException(
-                StringUtil::exception('Requested Per Page is invalid')
-            );
+            throw new ValidationException($validation->errors());
         }
 
         $beers = [];
