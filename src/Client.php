@@ -10,7 +10,7 @@ use MalvikLab\PunkApiClient\Exceptions\InvalidClientVersionException;
 class Client
 {
     public const NAME = 'PUNK API CLIENT';
-    public const VERSION = '1.0.1';
+    public const VERSION = '1.0.2';
     public const V2 = 'v2';
 
     /**

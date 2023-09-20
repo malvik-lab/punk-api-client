@@ -15,6 +15,11 @@
       "MalvikLab\\PunkApiClient\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
   "require": {
     "php": "^8.2",
     "guzzlehttp/guzzle": "^7.0",

@@ -4,12 +4,12 @@ namespace MalvikLab\PunkApiClient\Clients\V2;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
+use MalvikLab\PunkApiClient\Clients\V2\Rules\BeerRule;
 use MalvikLab\PunkApiClient\Exceptions\ValidationException;
 use Rakit\Validation\Validator;
 use MalvikLab\PunkApiClient\Clients\V2\DTO\BeersWithPaginationDTO;
 use MalvikLab\PunkApiClient\Interfaces\ClientInterface;
 use MalvikLab\PunkApiClient\Utils\StringUtil;
-use MalvikLab\PunkApiClient\Exceptions\InvalidInputException;
 use MalvikLab\PunkApiClient\Exceptions\ElementNotFoundException;
 use MalvikLab\PunkApiClient\Clients\V2\Makers\BeerMaker;
 use MalvikLab\PunkApiClient\Clients\V2\DTO\BeerDTO;
@@ -49,11 +49,13 @@ class Client implements ClientInterface
             throw new ValidationException($validation->errors());
         }
 
+        $validatedData = $validation->getValidData();
+
         $beers = [];
 
         $res = $this->httpClient->get(StringUtil::url('/v2/beers', [
-            'page' => $page,
-            'per_page' => $perPage
+            'page' => $validatedData['page'],
+            'per_page' => $validatedData['perPage']
         ]));
 
         $items = json_decode($res->getBody(), true);
@@ -116,18 +118,27 @@ class Client implements ClientInterface
      * @return BeerDTO
      * @throws GuzzleException
      * @throws ElementNotFoundException
-     * @throws InvalidInputException
+     * @throws ValidationException
      */
     function beer(int $id): BeerDTO
     {
-        if ( !filter_var($id, FILTER_VALIDATE_INT) || $id < 1 )
+        $validator = new Validator();
+
+        $data = [
+            'id' => $id,
+        ];
+
+        $validation = $validator->make($data, BeerRule::get());
+        $validation->validate();
+
+        if ( $validation->fails() )
         {
-            throw new InvalidInputException(
-                StringUtil::exception('Requested Id is invalid')
-            );
+            throw new ValidationException($validation->errors());
         }
 
-        $res = $this->httpClient->get(StringUtil::url('/v2/beers/' . $id));
+        $validatedData = $validation->getValidData();
+
+        $res = $this->httpClient->get(StringUtil::url('/v2/beers/' . $validatedData['id']));
         $data = json_decode($res->getBody(), true);
 
         if ( count($data) < 1 )

@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Integration;
+namespace Tests\Integration;
 
 use MalvikLab\PunkApiClient\Client;
 use MalvikLab\PunkApiClient\Clients\V2\Client as ClientV2;
 use MalvikLab\PunkApiClient\Clients\V2\DTO\BeersWithPaginationDTO;
 use MalvikLab\PunkApiClient\Exceptions\InvalidClientVersionException;
 use MalvikLab\PunkApiClient\Exceptions\ElementNotFoundException;
-use MalvikLab\PunkApiClient\Exceptions\InvalidInputException;
+use MalvikLab\PunkApiClient\Exceptions\ValidationException;
 use MalvikLab\PunkApiClient\Interfaces\ClientInterface;
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Exception\GuzzleException;
@@ -43,28 +43,28 @@ final class PunkApiClientV2Test extends TestCase
     /**
      * @return void
      * @throws GuzzleException
-     * @throws InvalidInputException
+     * @throws ValidationException
      */
     public function testInvalidPage(): void
     {
-        $this->expectException(InvalidInputException::class);
+        $this->expectException(ValidationException::class);
         $this->client->beers(0);
     }
 
     /**
      * @return void
      * @throws GuzzleException
-     * @throws InvalidInputException
+     * @throws ValidationException
      */
     public function testInvalidPerPage(): void
     {
-        $this->expectException(InvalidInputException::class);
+        $this->expectException(ValidationException::class);
         $this->client->beers(1, 0);
     }
 
     /**
      * @throws GuzzleException
-     * @throws InvalidInputException
+     * @throws ValidationException
      */
     public function testBeers(): void
     {
@@ -78,27 +78,27 @@ final class PunkApiClientV2Test extends TestCase
 
     /**
      * @throws GuzzleException
-     * @throws InvalidInputException
+     * @throws ValidationException
      */
     public function testWithPaginationInvalidPage()
     {
-        $this->expectException(InvalidInputException::class);
+        $this->expectException(ValidationException::class);
         $this->client->beersWithPagination(0);
     }
 
     /**
      * @throws GuzzleException
-     * @throws InvalidInputException
+     * @throws ValidationException
      */
     public function testWithPaginationInvalidPerPage()
     {
-        $this->expectException(InvalidInputException::class);
+        $this->expectException(ValidationException::class);
         $this->client->beersWithPagination(mt_rand(1, 5), 0);
     }
 
     /**
      * @throws GuzzleException
-     * @throws InvalidInputException
+     * @throws ValidationException
      */
     public function testWithPagination()
     {
@@ -107,9 +107,22 @@ final class PunkApiClientV2Test extends TestCase
     }
 
     /**
-     * @throws GuzzleException
-     * @throws InvalidInputException
+     * @return void
      * @throws ElementNotFoundException
+     * @throws GuzzleException
+     * @throws ValidationException
+     */
+    public function testInvalidBeer(): void
+    {
+        $this->expectException(ValidationException::class);
+        $beer = $this->client->beer(0);
+    }
+
+    /**
+     * @return void
+     * @throws ElementNotFoundException
+     * @throws GuzzleException
+     * @throws ValidationException
      */
     public function testBeer(): void
     {
