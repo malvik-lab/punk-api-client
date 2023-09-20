@@ -15,14 +15,14 @@ composer require malvik-lab/punk-api-client
 
 require 'vendor/autoload.php';
 
-use MalvikLab\PunkApiClient\Makers\ClientMaker;
+use MalvikLab\PunkApiClient\Client;
 
-$client = ClientMaker::make('v2');
+$client = Client::make(Client::V2);
 
 // or
 
 $httpClient = new \GuzzleHttp\Client();
-$client = ClientMaker::make('v2', $httpClient);
+$client = Client::make(Client::V2, $httpClient);
 ```
 
 ## Available methods
