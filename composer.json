@@ -28,6 +28,6 @@
   "require-dev": {
     "phpunit/phpunit": "^10"
   },
-  "abandoned": "malvik-lab/brewbuddy-api-client"
+  "abandoned": "malvik-lab/brewbuddy-api-client",
   "minimum-stability": "stable"
 }
