@@ -1,8 +1,11 @@
+> [!CAUTION]
+> ### Project No Longer Maintained.
+> I regret to inform you that this library is no longer being maintained due to the closure of the upstream project. As a result, there will be no further updates or support for this repository.
+
 # Punk Api Client
 
 Unofficial Punk Api Client.\
 You can find all the documentation on the official website: [https://www.punkapi.com](https://www.punkapi.com)
-
 
 ## Installation
 ```sh
